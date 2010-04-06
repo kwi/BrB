@@ -1,0 +1,11 @@
+BrB - Easy and Fast distributed ruby
+====================================
+
+Wiki and README coming soon
+
+# TODO
+
+  * Do Gemspecs and release gem
+  * Improve logging mechanism
+
+Copyright (c) 2010 Guillaume Luccisano - g-mai|: guillaume.luccisano, released under the MIT license
