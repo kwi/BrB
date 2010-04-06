@@ -2,10 +2,12 @@ BrB - Easy and Fast distributed ruby
 ====================================
 
 Wiki and README coming soon
+Clean up Coming soon with examples
 
 # TODO
 
   * Do Gemspecs and release gem
+  * Publish Benchmarks VS drb
   * Improve logging mechanism
 
 Copyright (c) 2010 Guillaume Luccisano - g-mai|: guillaume.luccisano, released under the MIT license
