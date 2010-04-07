@@ -1,13 +1,12 @@
-BrB - Easy and Fast distributed ruby
-====================================
+= BrB - Easy and Fast distributed ruby
 
 BrB is a simple and extremely fast interface for doing simple distributed ruby.
 The main power of the architecture is provided by EventMachine (Fast and reliable IO event library).
 
 BrB was build in order to achieve these 3 main goals :
-  * Simple and fast message passing between distant ruby process.
-  * Message passing with handling of return value when needed.
-  * Being extremely fast in order to handle more than a few thousand messages per seconds.
+* Simple and fast message passing between distant ruby process.
+* Message passing with handling of return value when needed.
+* Being extremely fast in order to handle more than a few thousand messages per seconds.
 
 The principle is simple and inspired from Drb (Original distributed ruby library) :
 A process want to expose an object on the network, and want other ruby processes calling directly method on it.
@@ -16,18 +15,16 @@ BrB handle all that part, it's fully transparent in the ruby code.
 BrB only support message passing with Marshable dumpable object : String, symbol, Array, hash, Number, Object etc...
 That mean you can not send file descriptor, Thread or another funky things like that :)
 
-Main Functionalities
-====================
+== Main Functionalities
 
-  * Unlimited objects exposed
-  * Processes can expose object and be client to exposed object too at the same time
-  * Do not wait for return by default : just do simple message passing
-  * Wait for return if needed by simply adding <em>_block</em> at the end of the function name
-  * Transmission of Exception when blocking call
-  * Thread safe if used correctly with Event Machine
+* Unlimited objects exposed
+* Processes can expose object and be client to exposed object too at the same time
+* Do not wait for return by default : just do simple message passing
+* Wait for return if needed by simply adding <em>_block</em> at the end of the function name
+* Transmission of Exception when blocking call
+* Thread safe if used correctly with Event Machine
 
-How it works
-============
+== How it works
 
 First of all, a process declare himself as a sever and expose any object on a given address and port.
 Then, any number of distant processes can create a <em>Tunnel</em> with that server and can expose an object in exchange too.
@@ -35,15 +32,14 @@ After connection are ready, just call method on the tunnel. It will just act lik
 
 
 More coming soon :
-  * Wiki and better README
-  * Clean up
-  * Examples
+* Wiki and better README
+* Clean up
+* Examples
 
 
-# TODO
-
-  * Do Gemspecs and release gem
-  * Publish Benchmarks VS drb
-  * Improve logging mechanism
+==  TODO
+* Do Gemspecs and release gem
+* Publish Benchmarks VS drb
+* Improve logging mechanism
 
 Copyright (c) 2010 Guillaume Luccisano - g-mai|: guillaume.luccisano, released under the MIT license
