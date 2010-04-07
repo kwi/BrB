@@ -3,7 +3,6 @@ module BrB
 
     def is_brb_request_blocking?(meth)
       if m = meth.to_s and m.rindex('_block') == (m.size - 6)
-        #tputs "Call is blocking"
         return true
       end
       nil
@@ -13,12 +12,7 @@ module BrB
     def new_brb_out_request(meth, *args)
       Thread.current[:brb_nb_out] ||= 0
       Thread.current[:brb_nb_out] += 1
-      #@nb_out ||= 0
-      #@nb_out += 1
 
-      #tputs "Send an out request (#{@nb_out}) : #{meth}(#{args.size})"
-
-      # Stock l'id du thread qui envoi
       block = is_brb_request_blocking?(meth) ? Thread.current.to_s.to_sym : nil
       if block
         args << block 
@@ -29,10 +23,7 @@ module BrB
 
       # Block jusqu'au retour de la requete
       if block
-        #t = Time.now.to_f
-        #tputs " > Wait for response"
         #TimeMonitor.instance.watch_thread!(@timeout_rcv_value || 45)
-        #tputs " > Wait for response - start receiving"
         begin
           r = recv(block, Thread.current[:brb_nb_out])
         rescue Exception => e
@@ -41,7 +32,6 @@ module BrB
         ensure
           #TimeMonitor.instance.remove_thread!
         end
-        #tputs " > Reponses get in #{(Time.now.to_f - t).round(4)}ms"
         if r.kind_of? Exception
           raise r
         end
@@ -53,24 +43,18 @@ module BrB
 
     # Execute a request on the local object
     def new_brb_in_request(meth, *args)
-      #@nb_in ||= 0
-      #@nb_in += 1
 
       if is_brb_request_blocking?(meth)
-        #tputs "Receive an incoming blocking request, nb thread: #{Thread.list.size}, (#{@nb_in}) : #{meth}(#{args.size})"
-        #tputs puts " - Nb DB connections : #{ActiveRecord::Base.connection_pool.instance_variable_get(:@connections).size}\n"
-        #t = Time.now.to_f
-        # Envoi la reponse en retour
+
         m = meth.to_s
         m = m[0, m.size - 6].to_sym
-        #tputs "Send the answer"
+
         idrequest = args.pop
         thread = args.pop
         begin
           #TimeMonitor.instance.watch_thread!(25)
           r = ((args.size > 0) ? @object.send(m, *args) : @object.send(m))
           brb_send([:r, r, thread, idrequest])
-          #tputs " > Response send in #{(Time.now.to_f - t).round(4)}ms"
         rescue Exception => e
           brb_send([:r, e, thread, idrequest])
           tputs e.to_s
@@ -80,8 +64,6 @@ module BrB
           #TimeMonitor.instance.remove_thread!
         end
       else
-        #tputs "Receive an incoming non blocking request, nb thread: #{Thread.list.size}, (#{@nb_in}) : #{meth}(#{args.size})"
-        #t = Time.now.to_f
 
         begin
           (args.size > 0) ? @object.send(meth, *args) : @object.send(meth)
@@ -90,7 +72,6 @@ module BrB
           tputs e.backtrace.join("\n")
           raise e
         end
-        #tputs " > Request is finish in #{(Time.now.to_f - t).round(4)}ms"
 
       end
 

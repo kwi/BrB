@@ -1,9 +1,36 @@
 require 'rubygems'
 require 'spec'
 
-#Thread.abort_on_exception = true
+Thread.abort_on_exception = true
 
 require File.dirname(__FILE__) + '/../init.rb'
+
+def open_service(object, host = 'localhost', port = 6200)
+  if !EM::reactor_running?
+    # Launch event machine reactor
+    Thread.new do
+      EM::run do
+        EM::set_quantum(20)
+      end
+    end
+    sleep 0.05
+  end
+  r = nil
+  EM.schedule do
+    r = BrB::Service.instance.start_service(:object => object, :silent => true, :host => host, :port => port)
+  end
+  sleep 0.1
+  return r
+end
+
+def connect_to_the_service(object_exposed, uri, &block)
+  r = nil
+  EM.schedule do
+    r = BrB::Tunnel.create(object_exposed, uri, :silent => true, &block)
+  end
+  sleep 0.1
+  return r
+end
 
 class BrBTest
   attr_reader :last_call
@@ -32,5 +59,10 @@ class BrBTest
   def one_arg_with_return(ar)
     increment_nb_call(:one_arg_with_return)
     return ar
+  end
+  
+  def return_same_value(val)
+    increment_nb_call(:return_same_value)
+    return val
   end
 end

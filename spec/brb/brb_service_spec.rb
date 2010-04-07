@@ -5,19 +5,9 @@ describe :brb_service do
     @brb = BrB::Service.instance
     @brb.stop_service
     @brb_test = BrBTest.new
-    open_service
+    open_service(self)
   end
   
-  def open_service(host = 'localhost', port = 6200)
-    Thread.new do
-      EventMachine::run do
-        EventMachine::set_quantum(20)
-        # Create a Brb service and expose the object BrbTest
-        BrB::Service.instance.start_service(:object => @brb_test, :silent => true, :nb_worker => 5, :host => host, :port => port)
-      end
-    end
-  end
-
   # Start the service
   it "should open a service on localhost:6200" do
     @brb.uri.should_not be_nil
@@ -30,9 +20,9 @@ describe :brb_service do
   end
 
   it "should start again the service after a stop" do
-    open_service
+    open_service(self)
     @brb.stop_service
-    open_service
+    open_service(self)
     @brb.uri.should_not be_nil
   end
 end

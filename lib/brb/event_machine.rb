@@ -15,7 +15,6 @@ class BrBEventMachine
     host, port = parse_uri(uri)
     begin
       socket = EventMachine::connect host, port, klass, opts.merge(:uri => "brb://#{host}:#{port}")
-      #puts "Connection open to : #{host}:#{port}"
 
     rescue Exception => e
       puts e.backtrace.join("\n")
@@ -29,9 +28,8 @@ class BrBEventMachine
     max = 80
     begin
       #EventMachine::epoll
-      s = EventMachine::start_server(host, port, klass, opts.merge(:uri => "brb://#{host}:#{port}"))
-      #puts "Server open on : #{host}:#{port}"
-      return "brb://#{host}:#{port}", s
+      uri = "brb://#{host}:#{port}"
+      return uri, EventMachine::start_server(host, port, klass, opts.merge(:uri => uri))
     rescue Exception => e
       max -= 1
       port += 1

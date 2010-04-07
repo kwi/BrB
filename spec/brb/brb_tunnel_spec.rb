@@ -1,5 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+$last_unregistered = nil
+$last_registered = nil
+
 describe :brb_service do
   before(:all) do
     @brb = BrB::Service.instance
@@ -7,27 +10,24 @@ describe :brb_service do
     @brb_test = BrBTest.new
     open_service(@brb_test)
     @client = connect_to_the_service(self, @brb.uri) do |type, tunnel|
-    end
-  end
-  
-  def open_service(object, host = 'localhost', port = 6200)
-    Thread.new do
-      EventMachine::run do
-        EventMachine::set_quantum(20)
-        # Create a Brb service and expose the object BrbTest
-        BrB::Service.instance.start_service(:object => object, :silent => true, :nb_worker => 5, :host => host, :port => port)
+      if type == :unregister
+        $last_unregistered = tunnel
+      elsif type == :register
+        $last_registered = tunnel
       end
     end
   end
-
-  def connect_to_the_service(object_exposed, uri, &block)
-    BrB::Tunnel.create(object_exposed, uri, :silent => true, &block)
-  end
-
+  
   # Start the service
   it "should the service be started" do
     @client.should_not be_nil
+    @client.active?.should be_true
     @client.uri.should == @brb.uri
+  end
+  
+  it "should have get the register message" do
+    sleep 0.2 # Be sure to get the message
+    $last_registered.class.should == @client.class
   end
   
   it "should correctly call simple distant method without args and without return" do
@@ -36,7 +36,7 @@ describe :brb_service do
     # Wait a little in order to be sure the method is called
     @brb_test.last_call.should == :noarg
   end
-  
+
   it "should correctly call simple distant method without args and without return multipe times" do
     nb_call_before = @brb_test.nb_call
     nb_call_to_do = 50
@@ -90,21 +90,16 @@ describe :brb_service do
     @client.one_arg_with_return_block(h).should == h
   end
   
-  it "should do nothing for unknow method when no blocking" do
-    e = nil
-    begin
-      @client.notavalidmeth
-    rescue Exception => e
-    end
-    e.should be_nil
+  it "should dump to symbol undumpable value by using the proxy" do
+    @client.return_same_value_block(Thread.current).class.should == Symbol
+    @client.return_same_value_block(Thread.current).should == Thread.current.to_s.to_sym
   end
-  
+
   it "should transmit with success exception when blocking" do
     e = nil
     begin
       @client.notavalidmeth_block
     rescue Exception => e
-      
     end
     e.should be_a NameError
   end
@@ -113,6 +108,17 @@ describe :brb_service do
   it "should stop the service after usage" do
     @brb.stop_service
     @brb.uri.should be_nil
+  end
+
+  # Finally, stop the service
+  it "should stop the tunnel after usage" do
+    @client.stop_service
+    @client.active?.should_not be_true
+  end
+
+  it "should have get the unregister message" do
+    sleep 0.2 # Be sure to get the message
+    $last_unregistered.class.should == @client.class
   end
 end
 
