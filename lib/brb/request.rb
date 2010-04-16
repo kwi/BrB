@@ -27,7 +27,7 @@ module BrB
         begin
           r = recv(block, Thread.current[:brb_nb_out])
         rescue Exception => e
-          @object.log_error(e, "Error sending out request #{meth}(#{args.inspect})")
+          #@object.log_error(e, "Error sending out request #{meth}(#{args.inspect})")
           raise e
         ensure
           #TimeMonitor.instance.remove_thread!

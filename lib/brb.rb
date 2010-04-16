@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), 'brb', 'exception.rb')
 require File.join(File.dirname(__FILE__), 'brb', 'event_machine.rb')
 require File.join(File.dirname(__FILE__), 'brb', 'tunnel.rb')
-require 'Singleton'
+require 'singleton'
 
 #
 # Brb Main class used to do basic distributed ruby, Simple but fast

@@ -3,10 +3,11 @@
 BrB is a simple and extremely fast interface for doing simple distributed ruby.
 The main power of the architecture is provided by EventMachine (Fast and reliable IO event library).
 
-BrB was build in order to achieve these 3 main goals :
+BrB was build in order to achieve these 4 main goals :
 * Simple and fast message passing between distant ruby process.
 * Message passing with handling of return value when needed.
 * Being extremely fast in order to handle more than a few thousand messages per seconds.
+* Being completely transparent for developer.
 
 The principle is simple and inspired from Drb (Original distributed ruby library) :
 A process want to expose an object on the network, and want other ruby processes calling directly method on it.
@@ -30,16 +31,19 @@ First of all, a process declare himself as a sever and expose any object on a gi
 Then, any number of distant processes can create a <em>Tunnel</em> with that server and can expose an object in exchange too.
 After connection are ready, just call method on the tunnel. It will just act like normal method calling on the exposed object !
 
+== What BrB is usable for ?
 
-More coming soon :
-* Wiki and better README
-* Clean up
-* Examples
-
+* Doing Simple message passing between ruby process.
+* Connecting hundred of ruby process transparently.
+* Building a real-time scalable (game) server
+* Taking important load on a server easily just by distributing the load on multiple BrB instance.
+* Taking advantage of multi-core and multi-threaded systems.
 
 ==  TODO
-* Do Gemspecs and release gem
+* Better README and Wiki
+* Writing more examples
 * Publish Benchmarks VS drb
 * Improve logging mechanism
+* Clean up
 
-Copyright (c) 2010 Guillaume Luccisano - g-mai|: guillaume.luccisano, released under the MIT license
+Copyright (c) 2009-2010 Guillaume Luccisano - g-mai|: guillaume.luccisano, released under the MIT license

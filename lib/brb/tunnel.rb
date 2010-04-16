@@ -6,8 +6,8 @@ require File.join(File.dirname(__FILE__), 'tunnel', 'shared.rb')
 module BrB
   module Tunnel
 
-    def self.create(object, uri = nil, silent = nil, &block)
-      BrBProtocol.open(uri, BrB::Tunnel::Handler, :object => object, :silent => silent, :block => block)
+    def self.create(object, uri = nil, opts = {}, &block)
+      BrBProtocol.open(uri, BrB::Tunnel::Handler, opts.merge(:object => object, :block => block))
     end
 
     # Brb interface Handler for Tunnel over Event machine
@@ -35,6 +35,7 @@ module BrB
       end
 
       def post_init
+        tputs " [BrB] Tunnel initialized on #{@uri}"
         @active = true
         if @block
           EventMachine.defer do
@@ -49,6 +50,7 @@ module BrB
       end
 
       def unbind
+        tputs ' [BrB] Tunnel service closed'
         @active = false
         if @block
           EventMachine.defer do

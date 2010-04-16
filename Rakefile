@@ -11,3 +11,13 @@ Spec::Rake::SpecTask.new do |t|
 end
 
 task :default => :spec
+
+desc "Run simple core"
+task :simple_core_example do
+  require 'examples/simple_core'
+end
+
+desc "Run simple client (call simple_core_before)"
+task :simple_client_example do
+  require 'examples/simple_client'
+end
