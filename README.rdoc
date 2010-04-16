@@ -1,6 +1,6 @@
 = BrB - Easy and Fast distributed ruby
 
-BrB is a simple and extremely fast interface for doing simple distributed ruby.
+BrB is a simple, fully transparent and extremely fast interface for doing simple distributed ruby.
 The main power of the architecture is provided by EventMachine (Fast and reliable IO event library).
 
 BrB was build in order to achieve these 4 main goals :

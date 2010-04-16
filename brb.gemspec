@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.author = "Guillaume Luccisano"
   s.email = "guillaume.luccisano@gmail.com"
   s.homepage = "http://github.com/kwi/BrB"
-  s.summary = "BrB is a simple and extremely fast interface for doing simple distributed ruby"
-  s.description = "BrB is a simple and extremely fast interface for doing simple distributed ruby and message passing"
+  s.summary = "BrB is a simple, fully transparent and extremely fast interface for doing simple distributed ruby"
+  s.description = "BrB is a simple, fully transparent and extremely fast interface for doing simple distributed ruby and message passing"
   s.requirements << 'eventmachine'
 
   s.add_dependency('eventmachine')
