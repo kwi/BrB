@@ -1,0 +1,1 @@
+# Future BrB custom exceptions will come here

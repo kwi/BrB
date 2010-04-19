@@ -63,7 +63,7 @@ module BrB
 
             @queue << obj
 
-            EventMachine.defer do
+            EM.defer do
               treat_request(@queue.pop)
             end
             

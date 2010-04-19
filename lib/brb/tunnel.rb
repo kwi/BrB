@@ -7,11 +7,11 @@ module BrB
   module Tunnel
 
     def self.create(object, uri = nil, opts = {}, &block)
-      BrBProtocol.open(uri, BrB::Tunnel::Handler, opts.merge(:object => object, :block => block))
+      BrB::Protocol.open(uri, BrB::Tunnel::Handler, opts.merge(:object => object, :block => block))
     end
 
     # Brb interface Handler for Tunnel over Event machine
-    class Handler < EventMachine::Connection
+    class Handler < ::EventMachine::Connection
       attr_reader :uri
 
       include BrB::Request
@@ -38,12 +38,12 @@ module BrB
         tputs " [BrB] Tunnel initialized on #{@uri}"
         @active = true
         if @block
-          EventMachine.defer do
+          EM.defer do
             @block.call(:register, self)
           end
         end
       end
-      
+
       def close_connection(after_writing = false)
         @active = false
         super
@@ -53,7 +53,7 @@ module BrB
         tputs ' [BrB] Tunnel service closed'
         @active = false
         if @block
-          EventMachine.defer do
+          EM.defer do
             @block.call(:unregister, self)
           end
         end

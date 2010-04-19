@@ -1,4 +1,4 @@
-require 'lib/brb'
+require File.join(File.dirname(__FILE__), '../init.rb')
 
 class ExposedCoreObject
   
@@ -23,9 +23,6 @@ Thread.abort_on_exception = true
 port = 5555
 host = 'localhost'
 
-EM::run do
-  EM::set_quantum(20)
-
-  puts " > Starting the core on brb://#{host}:#{port}"
-  BrB::Service.instance.start_service(:object => ExposedCoreObject.new, :silent => false, :host => host, :port => port)
-end
+puts " > Starting the core on brb://#{host}:#{port}"
+BrB::Service.start_service(:object => ExposedCoreObject.new, :silent => false, :host => host, :port => port)
+EM.reactor_thread.join

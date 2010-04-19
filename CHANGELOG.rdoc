@@ -1,3 +1,8 @@
+0.2.1 (Apr 16, 2010)
+
+* Automatically start EM if not started
+* Deprecate the usage of BrB::Service.instance => use BrB::Service instead
+
 0.2.0 (Apr 16, 2010)
 
 * Releasing gem and wiki
