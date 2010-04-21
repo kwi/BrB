@@ -20,7 +20,7 @@ module BrB
       def initialize(opts = {})
         super
         @object = opts[:object]
-        @silent = opts[:silent]
+        @verbose = opts[:verbose]
         @timeout_rcv_value = opts[:timeout] || 30
         @close_after_timeout = opts[:close_after_timeout] || false
         @uri = opts[:uri]

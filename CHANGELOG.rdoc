@@ -1,3 +1,7 @@
+0.2.2 (Apr 21, 2010)
+
+* Change silent option to verbose
+
 0.2.1 (Apr 16, 2010)
 
 * Automatically start EM if not started

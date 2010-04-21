@@ -6,11 +6,11 @@ Thread.abort_on_exception = true
 require File.dirname(__FILE__) + '/../init.rb'
 
 def open_service(object, host = 'localhost', port = 6200)
-  BrB::Service.start_service(:object => object, :silent => true, :host => host, :port => port)
+  BrB::Service.start_service(:object => object, :verbose => false, :host => host, :port => port)
 end
 
 def connect_to_the_service(object_exposed, uri, &block)
-  BrB::Tunnel.create(object_exposed, uri, :silent => true, &block)
+  BrB::Tunnel.create(object_exposed, uri, :verbose => false, &block)
 end
 
 class BrBTest

@@ -6,13 +6,13 @@ module BrB
   class Service
     @@uri = nil
     @@em_signature = nil
-    @@silent = true
+    @@verbose = false
 
     class << self
 
     private
       def tputs(s)
-        puts s if !@@silent
+        puts s if @@verbose
       end
 
     public
@@ -22,7 +22,7 @@ module BrB
       def start_service(opts = {}, &block)
         return if @@em_signature
   
-        @@silent = opts[:silent]
+        @@verbose = opts[:verbose]
   
         addr = "brb://#{opts[:host] || 'localhost'}:#{opts[:port] || 6200}"
   

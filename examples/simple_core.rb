@@ -24,5 +24,5 @@ port = 5555
 host = 'localhost'
 
 puts " > Starting the core on brb://#{host}:#{port}"
-BrB::Service.start_service(:object => ExposedCoreObject.new, :silent => false, :host => host, :port => port)
+BrB::Service.start_service(:object => ExposedCoreObject.new, :verbose => true, :host => host, :port => port)
 EM.reactor_thread.join

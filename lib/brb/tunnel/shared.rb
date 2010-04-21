@@ -4,7 +4,7 @@ module BrB
   module Tunnel
     module Shared
       def tputs(s)
-        puts s if !@silent
+        puts s if @verbose
       end
 
       def make_proxy(r)
