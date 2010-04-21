@@ -88,14 +88,12 @@ module BrB
             if rep[1] == nb_out # On check ke c'est bien la réponse que l'on attend
               return rep[0]
             end
-            #Error.create(:backtrace => "Error in Brb receiving in thread #{Thread.current}. Try to get #{nb_out} request id, but get #{rep[1]}", :type => 'BrBRecvBadId', :url => "#{@object.class}-#{@uri}")
             if rep[1] > nb_out
               return nil
             end
           end
         rescue Exception => e
           if @close_after_timeout == true
-            #Error.create(:backtrace => "Error in Rcv in thread #{Thread.current}. Try to get #{nb_out} => Stop service #{e.class.to_s}\n\n#{e.backtrace.join("\n")}", :type => e.to_s, :url => "#{@object.class}-#{@uri}")
             stop_service
             sleep 1
             raise e

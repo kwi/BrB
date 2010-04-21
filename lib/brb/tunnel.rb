@@ -6,6 +6,9 @@ require File.join(File.dirname(__FILE__), 'tunnel', 'shared.rb')
 module BrB
   module Tunnel
 
+    # Create a BrB Tunnel by connecting to a distant BrB service
+    # Pass a block if you want to get register and unregister events
+    # The first parameter object is the object you want to expose in the BrB tunnel
     def self.create(object, uri = nil, opts = {}, &block)
       BrB::Protocol.open(uri, BrB::Tunnel::Handler, opts.merge(:object => object, :block => block))
     end
@@ -21,19 +24,18 @@ module BrB
         super
         @object = opts[:object]
         @verbose = opts[:verbose]
-        @timeout_rcv_value = opts[:timeout] || 30
+        @timeout_rcv_value = opts[:timeout] || 30 # Currently not implemented due to the lack of performance of ruby Timeout
         @close_after_timeout = opts[:close_after_timeout] || false
         @uri = opts[:uri]
-        @closed = nil
         @replock = Mutex.new
         @responses = {}
         @block = opts[:block]
-        @mu = Mutex.new
         
         @queue = Queue.new
         @buffer = ''
       end
 
+      # EventMachine Callback, called after connection has been initialized
       def post_init
         tputs " [BrB] Tunnel initialized on #{@uri}"
         @active = true
@@ -49,6 +51,8 @@ module BrB
         super
       end
 
+      # EventMachine unbind event
+      # The connection has been closed
       def unbind
         tputs ' [BrB] Tunnel service closed'
         @active = false
@@ -59,18 +63,21 @@ module BrB
         end
       end
       
+      # Stop the service
       def stop_service
-        tputs ' [BrB] Stop Tunnel service'
+        tputs ' [BrB] Stopping Tunnel service...'
         @active = false
         EM.schedule do
           close_connection
         end
       end
 
+      # Return true if the tunnel is currently active
       def active?
         @active
       end
 
+      # When no method is found on tunnel interface, create an brb out request
       def method_missing(meth, *args)
         return nil if !@active
         new_brb_out_request(meth, *args)

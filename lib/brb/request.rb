@@ -27,7 +27,6 @@ module BrB
         begin
           r = recv(block, Thread.current[:brb_nb_out])
         rescue Exception => e
-          #@object.log_error(e, "Error sending out request #{meth}(#{args.inspect})")
           raise e
         ensure
           #TimeMonitor.instance.remove_thread!
@@ -52,7 +51,6 @@ module BrB
         idrequest = args.pop
         thread = args.pop
         begin
-          #TimeMonitor.instance.watch_thread!(25)
           r = ((args.size > 0) ? @object.send(m, *args) : @object.send(m))
           brb_send([:r, r, thread, idrequest])
         rescue Exception => e
@@ -60,8 +58,6 @@ module BrB
           tputs e.to_s
           tputs e.backtrace.join("\n")
           #raise e
-        ensure
-          #TimeMonitor.instance.remove_thread!
         end
       else
 

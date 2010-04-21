@@ -23,9 +23,9 @@ module BrB
         return if @@em_signature
   
         @@verbose = opts[:verbose]
-  
-        addr = "brb://#{opts[:host] || 'localhost'}:#{opts[:port] || 6200}"
-  
+
+        addr = opts[:uri] || "brb://#{opts[:host] || 'localhost'}:#{opts[:port] || 6200}"
+
         tputs " [BrB] Start service on #{addr} ..."
         @@uri, @@em_signature = BrB::Protocol::open_server(addr, BrB::Tunnel::Handler, opts.merge(:block => block))
         tputs " [BrB] Service started on #{@@uri}"
