@@ -1,17 +1,26 @@
 = BrB - Easy and Fast distributed ruby
 
-BrB is a simple, fully transparent and extremely fast interface for doing simple distributed ruby.
-The main power of the architecture is provided by EventMachine (Fast and reliable IO event library).
+BrB was built in order to achieve these 4 main goals :
 
-BrB was build in order to achieve these 4 main goals :
-* Simple and fast message passing between distant ruby process.
-* Message passing with handling of return value when needed.
-* Being extremely fast in order to handle more than a few thousand messages per seconds.
+   1. Simple and fast message passing between distant Ruby processes.
+   2. Message passing with of return values when needed.
+   3. Being extremely fast in order to handle more than a few thousand messages per second.
+   4. Being completely transparent for developer.
+
+The principle is simple and inspired from Drb (standard distributed ruby library) :
+A process exposes an object over the network and any ruby process (after having established a connection tunnel) can directly call a method on the exposed object. BrB handles that part, so it’s fully transparent in the Ruby code.
+
+BrB is a simple, fully transparent and extremely fast interface for doing simple distributed Ruby.
+The core of the architecture is provided by EventMachine  (a fast and reliable IO event library).
+
+BrB was built in order to achieve these 4 main goals :
+* Simple and fast message passing between distant Ruby processes.
+* Message passing with of return values when needed.
+* Being extremely fast in order to handle more than a few thousand messages per second.
 * Being completely transparent for developer.
 
-The principle is simple and inspired from Drb (Original distributed ruby library) :
-A process want to expose an object on the network, and want other ruby processes calling directly method on it.
-BrB handle all that part, it's fully transparent in the ruby code.
+The principle is simple and inspired from Drb (standard distributed ruby library) :
+A process exposes an object over the network and any ruby process (after having established a connection tunnel) can directly call a method on the exposed object. BrB handles that part, so it’s fully transparent in the Ruby code.
 
 BrB only support message passing with Marshable dumpable object : String, symbol, Array, hash, Number, Object etc...
 That mean you can not send file descriptor, Thread or another funky things like that :)
@@ -31,7 +40,7 @@ First of all, a process declare himself as a sever and expose any object on a gi
 Then, any number of distant processes can create a <em>Tunnel</em> with that server and can expose an object in exchange too.
 After connection are ready, just call method on the tunnel. It will just act like normal method calling on the exposed object !
 
-== What BrB is usable for ?
+== What BrB is designed for ?
 
 * Doing Simple message passing between ruby process.
 * Connecting hundred of ruby process transparently.
