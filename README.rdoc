@@ -1,15 +1,5 @@
 = BrB - Easy and Fast distributed ruby
 
-BrB was built in order to achieve these 4 main goals :
-
-   1. Simple and fast message passing between distant Ruby processes.
-   2. Message passing with of return values when needed.
-   3. Being extremely fast in order to handle more than a few thousand messages per second.
-   4. Being completely transparent for developer.
-
-The principle is simple and inspired from Drb (standard distributed ruby library) :
-A process exposes an object over the network and any ruby process (after having established a connection tunnel) can directly call a method on the exposed object. BrB handles that part, so it’s fully transparent in the Ruby code.
-
 BrB is a simple, fully transparent and extremely fast interface for doing simple distributed Ruby.
 The core of the architecture is provided by EventMachine  (a fast and reliable IO event library).
 
