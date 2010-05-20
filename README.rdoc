@@ -40,10 +40,14 @@ After connection are ready, just call method on the tunnel. It will just act lik
 * Taking advantage of multi-core and multi-threaded systems.
 
 ==  TODO
-* Better README and Wiki
 * Writing more examples
 * Publish Benchmarks VS drb
 * Improve logging mechanism
 * Clean up
+
+== Contributors
+
+* kwi (Guillaume Luccisano)
+* bwalton (Brian Walton)
 
 Copyright (c) 2009-2010 Guillaume Luccisano - g-mai|: guillaume.luccisano, released under the MIT license
