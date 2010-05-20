@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "brb"
-  s.version = "0.2.2"
+  s.version = "0.3.0"
   s.author = "Guillaume Luccisano"
   s.email = "guillaume.luccisano@gmail.com"
   s.homepage = "http://github.com/kwi/BrB"

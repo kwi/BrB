@@ -1,3 +1,9 @@
+0.3.0 (May 21, 2010)
+
+* Added Callback functionality through block
+* Added Callback example
+* Little spec refactoring
+
 0.2.2 (Apr 21, 2010)
 
 * Change silent option to verbose

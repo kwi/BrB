@@ -4,6 +4,7 @@ class ExposedCoreObject
   
   def simple_api_method
     puts "#{Thread.current} > In simple api method, now sleeping"
+    yield if block_given?
     sleep 1
     puts "#{Thread.current} > Done sleeping in simple api method, return"
     return 'OK'

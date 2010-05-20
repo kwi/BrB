@@ -20,7 +20,8 @@ That mean you can not send file descriptor, Thread or another funky things like 
 * Unlimited objects exposed
 * Processes can expose object and be client to exposed object too at the same time
 * Do not wait for return by default : just do simple message passing
-* Wait for return if needed by simply adding <em>_block</em> at the end of the function name
+* Handle return values without blocking with the usage of a simple block
+* Blocking wait for return if needed by simply adding <em>_block</em> at the end of the method name
 * Transmission of Exception when blocking call
 * Thread safe if used correctly with Event Machine
 

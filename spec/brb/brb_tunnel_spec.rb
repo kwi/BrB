@@ -3,7 +3,7 @@ require 'spec_helper'
 $last_unregistered = nil
 $last_registered = nil
 
-describe :brb_service do
+describe :brb_tunnel do
   before(:all) do
     @brb = BrB::Service
     @brb.stop_service
@@ -90,6 +90,12 @@ describe :brb_service do
     @client.one_arg_with_return_block(h).should == h
   end
   
+  it "should correctly return multiple values" do
+    r1, r2 = @client.return_same_value_twice_block(:ret, :ret2)
+    r1.should == :ret
+    r2.should == :ret2
+  end
+  
   it "should dump to symbol undumpable value by using the proxy" do
     @client.return_same_value_block(Thread.current).class.should == Symbol
     @client.return_same_value_block(Thread.current).should == Thread.current.to_s.to_sym
@@ -103,6 +109,52 @@ describe :brb_service do
     end
     e.should be_a NameError
   end
+  
+  it "should use block as non blocking callback with return value" do
+    block_called = nil
+    @client.return_same_value(:arg) do |v|
+      v.should == :arg
+      block_called = true
+    end
+    sleep 0.2
+    # Wait a little in order to be sure the method is called
+    @brb_test.last_call.should == :return_same_value
+    block_called.should == true
+  end
+  
+  it "should correctly handle multiple values return with callbacks" do
+    block_called = nil
+    @client.return_same_value_twice(:ret, :ret2) do |r1, r2|
+      r1.should == :ret
+      r2.should == :ret2
+      block_called = true
+    end
+    sleep 0.2
+    # Wait a little in order to be sure the method is called
+    @brb_test.last_call.should == :return_same_value_twice
+    block_called.should == true
+  end
+  
+  it "should correctly handle no block args return with callbacks" do
+    block_called = nil
+    @client.return_same_value_twice(:ret, :ret2) do
+      block_called = true
+    end
+    sleep 0.2
+    # Wait a little in order to be sure the method is called
+    @brb_test.last_call.should == :return_same_value_twice
+    block_called.should == true
+  end
+  
+  it "should raise an exception when calling a blocking method with a callback" do
+    e = nil
+    begin
+      @client.return_same_value_block(:arg) do |v|
+      end
+    rescue Exception => e
+    end
+    e.should_not be_nil
+  end
 
   # Finally, stop the service
   it "should stop the service after usage" do
@@ -110,7 +162,7 @@ describe :brb_service do
     @brb.uri.should be_nil
   end
 
-  # Finally, stop the service
+  # Finally, stop the client tunnel
   it "should stop the tunnel after usage" do
     @client.stop_service
     @client.active?.should_not be_true

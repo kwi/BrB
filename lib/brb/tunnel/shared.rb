@@ -54,13 +54,17 @@ module BrB
         @buffer << data
         
         while obj = load_request
-          if obj[0] == :r
+          if obj[0] == BrB::Request::ReturnCode
+
+            # Return if we have a callback handling the return :
+            next if treat_callback_return(obj[1], obj[2], obj[3])
+
+            # No callback, so blocking thread is waiting :
             @replock.lock
             @responses[obj[2]] ||= Queue.new
             @replock.unlock
             @responses[obj[2]] << [obj[1], obj[3]]
           else
-
             @queue << obj
 
             EM.defer do
@@ -79,6 +83,51 @@ module BrB
         end
       end
 
+      # Declare a new callback to call for a given request
+      # Thread safe code
+      def declare_callback(key, nb_out, &block)
+        @callbacks_mutex.lock
+
+        @callbacks[key] ||= {}
+        @callbacks[key][nb_out] = block
+
+      ensure
+        @callbacks_mutex.unlock
+      end
+      
+      # Return associated callback if present
+      # And if present, delete the associate callback from the table
+      # Thread safe code
+      def get_callback(key, nb_out)
+        @callbacks_mutex.lock
+        
+        if @callbacks[key] and b = @callbacks[key].delete(nb_out)
+          return b
+        end
+
+      ensure
+        @callbacks_mutex.unlock
+      end
+      
+      # Call a callback if present, return true if exists
+      # Non blocking action, use EM.defer
+      def treat_callback_return(ret, key, nb_out)
+
+        if b = get_callback(key, nb_out)
+          EM.defer do
+            # With arity, handle multiple block arguments or no arguments
+            b.arity == 1 ? b.call(ret) : (b.arity == 0 ? b.call : b.call(*ret)) 
+          end
+
+          # A callback has been found and called, return true
+          return true
+        end
+        
+        # No callback, do nothing
+        return nil
+      end
+
+      # Blocking method that wait on the @responses table an answer
       def recv(key, nb_out)
         begin
           @replock.lock
@@ -86,6 +135,12 @@ module BrB
           @replock.unlock
           while rep = r.pop
             if rep[1] == nb_out # On check ke c'est bien la réponse que l'on attend
+              
+              # Call the callback
+              if block_given?
+                yield(rep[0])
+              end
+
               return rep[0]
             end
             if rep[1] > nb_out

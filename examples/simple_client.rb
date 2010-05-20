@@ -26,6 +26,14 @@ puts " >> Calling long call, and wait for response..."
 r = core.simple_long_api_method_block
 puts " > Api long response : #{r}"
 
+## Calling method with a callback block for handling the return value
+core.simple_api_method do |r|
+  puts " > Get the callback response : #{r}"
+end
+
+puts " >> Callback method has been called continue .."
+sleep 2
+
 core.stop_service
 
 # Our job is over, close event machine :

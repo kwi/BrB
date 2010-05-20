@@ -33,6 +33,10 @@ module BrB
         
         @queue = Queue.new
         @buffer = ''
+        
+        # Callbacks handling :
+        @callbacks = {}
+        @callbacks_mutex = Mutex.new
       end
 
       # EventMachine Callback, called after connection has been initialized
@@ -78,9 +82,9 @@ module BrB
       end
 
       # When no method is found on tunnel interface, create an brb out request
-      def method_missing(meth, *args)
+      def method_missing(meth, *args, &block)
         return nil if !@active
-        new_brb_out_request(meth, *args)
+        new_brb_out_request(meth, *args, &block)
       end
     end
   end

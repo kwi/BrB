@@ -46,4 +46,9 @@ class BrBTest
     increment_nb_call(:return_same_value)
     return val
   end
+  
+  def return_same_value_twice(val, val2)
+    increment_nb_call(:return_same_value_twice)
+    return val, val2
+  end
 end
