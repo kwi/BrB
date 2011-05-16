@@ -40,7 +40,7 @@ module BrB
           return q.pop
 
         rescue Exception => e
-          puts e.backtrace.join("\n")
+          BrB.logger.error e.backtrace.join("\n")
           raise "#{e} - #{uri}"
         end
       end
@@ -65,7 +65,7 @@ module BrB
           max -= 1
           port += 1
           retry if max > 0
-          puts e.backtrace.join("\n")
+          BrB.logger.error e.backtrace.join("\n")
           raise "#{e} - BrB Tcp Event machine Can not bind on #{host}:#{port}"
         end
 

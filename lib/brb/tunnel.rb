@@ -24,6 +24,7 @@ module BrB
         super
         @object = opts[:object]
         @verbose = opts[:verbose]
+        BrB.logger.level = @verbose ? Logger::INFO : Logger::WARN
         @timeout_rcv_value = opts[:timeout] || 30 # Currently not implemented due to the lack of performance of ruby Timeout
         @close_after_timeout = opts[:close_after_timeout] || false
         @uri = opts[:uri]
@@ -41,7 +42,7 @@ module BrB
 
       # EventMachine Callback, called after connection has been initialized
       def post_init
-        tputs " [BrB] Tunnel initialized on #{@uri}"
+        BrB.logger.info " [BrB] Tunnel initialized on #{@uri}"
         @active = true
         if @block
           EM.defer do
@@ -58,7 +59,7 @@ module BrB
       # EventMachine unbind event
       # The connection has been closed
       def unbind
-        tputs ' [BrB] Tunnel service closed'
+        BrB.logger.info ' [BrB] Tunnel service closed'
         @active = false
         if @block
           EM.defer do
@@ -69,7 +70,7 @@ module BrB
       
       # Stop the service
       def stop_service
-        tputs ' [BrB] Stopping Tunnel service...'
+        BrB.logger.info ' [BrB] Stopping Tunnel service...'
         @active = false
         EM.schedule do
           close_connection

@@ -70,8 +70,8 @@ module BrB
           brb_send([ReturnCode, r, thread, idrequest])
         rescue Exception => e
           brb_send([ReturnCode, e, thread, idrequest])
-          tputs e.to_s
-          tputs e.backtrace.join("\n")
+          BrB.logger.error e.to_s
+          BrB.logger.error e.backtrace.join("\n")
           #raise e
         end
       else
@@ -79,8 +79,8 @@ module BrB
         begin
           (args.size > 0) ? @object.send(meth, *args) : @object.send(meth)
         rescue Exception => e
-          tputs "#{e.to_s} => By calling #{meth} on #{@object.class} with args : #{args.inspect}"
-          tputs e.backtrace.join("\n")
+          BrB.logger.error "#{e.to_s} => By calling #{meth} on #{@object.class} with args : #{args.inspect}"
+          BrB.logger.error e.backtrace.join("\n")
           raise e
         end
 

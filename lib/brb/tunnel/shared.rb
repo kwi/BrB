@@ -3,10 +3,6 @@
 module BrB
   module Tunnel
     module Shared
-      def tputs(s)
-        puts s if @verbose
-      end
-
       def make_proxy(r)
         if r.is_a?(Array)
           t = []
@@ -14,7 +10,7 @@ module BrB
             t << if obj.is_a? Array
               make_proxy(obj)
             elsif !obj.is_a?(Symbol) and !obj.is_a?(String) and obj and !(Marshal::dump(obj) rescue nil)
-              #puts "  - > Make proxy for : #{obj.class}"
+              #BrB.logger.debug "  - > Make proxy for : #{obj.class}"
               obj.to_s.to_sym
             else
               obj

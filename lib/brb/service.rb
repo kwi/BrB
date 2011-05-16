@@ -7,13 +7,8 @@ module BrB
     @@uri = nil
     @@em_signature = nil
     @@verbose = false
-
+    
     class << self
-
-    private
-      def tputs(s)
-        puts s if @@verbose
-      end
 
     public
 
@@ -23,12 +18,13 @@ module BrB
         return if @@em_signature
   
         @@verbose = opts[:verbose]
+        BrB.logger.level = @@verbose ? Logger::INFO : Logger::WARN
 
         addr = opts[:uri] || "brb://#{opts[:host] || 'localhost'}:#{opts[:port] || 6200}"
 
-        tputs " [BrB] Start service on #{addr} ..."
+        BrB.logger.info " [BrB] Start service on #{addr} ..."
         @@uri, @@em_signature = BrB::Protocol::open_server(addr, BrB::Tunnel::Handler, opts.merge(:block => block))
-        tputs " [BrB] Service started on #{@@uri}"
+        BrB.logger.info " [BrB] Service started on #{@@uri}"
       end
 
       def uri
@@ -39,7 +35,7 @@ module BrB
       def stop_service
         return if !@@em_signature or !EM::reactor_running?
       
-        tputs " [BrB] Stop service on #{@@uri}"
+        BrB.logger.info " [BrB] Stop service on #{@@uri}"
         sign = @@em_signature
         q = Queue.new # Creation of a Queue for waiting server to stop
         EM::schedule do
@@ -52,7 +48,7 @@ module BrB
       
       # Deprecated old method
       def instance
-        puts "DEPRECATION WARNING: BrB::Service::instance is deprecated => Just use BrB::Service"
+        BrB.logger.warn "DEPRECATION WARNING: BrB::Service::instance is deprecated => Just use BrB::Service"
         self
       end
     end
