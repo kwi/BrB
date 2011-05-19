@@ -51,6 +51,7 @@ After connection are ready, just call method on the tunnel. It will just act lik
 
 * kwi (Guillaume Luccisano)
 * bwalton (Brian Walton)
+* dpree (Jens Bissinger)
 
 
 Copyright (c) 2009-2010 Guillaume Luccisano - g-mai|: guillaume.luccisano, released under the MIT license
