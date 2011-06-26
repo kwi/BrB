@@ -57,11 +57,6 @@ module BrB
 
     # Execute a request on the local object
     def new_brb_in_request(meth, *args)
-      client_info =  {
-        :ip_address => @ip_address, 
-        :port       => @port 
-      }
-
       if is_brb_request_blocking?(meth)
 
         m = meth.to_s
@@ -70,10 +65,9 @@ module BrB
         idrequest = args.pop
         thread = args.pop
         
-        args << client_info
         begin
-          # r = ((args.size > 0) ? @object.send(m, *args) : @object.send(m))
-          r = @object.send(m, *args)
+          args << { :ip_address => @ip_address, :port => @port } if @ip_address
+          r = ((args.size > 0) ? @object.send(m, *args) : @object.send(m))
           brb_send([ReturnCode, r, thread, idrequest])
         rescue Exception => e
           brb_send([ReturnCode, e, thread, idrequest])
@@ -82,11 +76,10 @@ module BrB
           #raise e
         end
       else
-        args << client_info
-        
         begin
-          # (args.size > 0) ? @object.send(meth, *args) : @object.send(meth)
-          @object.send(meth, *args)
+          args << { :ip_address => @ip_address, :port => @port } if @ip_address
+          (args.size > 0) ? @object.send(meth, *args) : @object.send(meth)
+
         rescue Exception => e
           BrB.logger.error "#{e.to_s} => By calling #{meth} on #{@object.class} with args : #{args.inspect}"
           BrB.logger.error e.backtrace.join("\n")

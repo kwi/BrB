@@ -16,6 +16,7 @@ module BrB
     # Brb interface Handler for Tunnel over Event machine
     class Handler < ::EventMachine::Connection
       attr_reader :uri
+      attr_reader :ip_address, :port
 
       include BrB::Request
       include BrB::Tunnel::Shared
