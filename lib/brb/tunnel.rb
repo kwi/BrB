@@ -43,7 +43,15 @@ module BrB
 
       # EventMachine Callback, called after connection has been initialized
       def post_init
-        @port, @ip_address = Socket.unpack_sockaddr_in(get_peername) 
+        begin
+          @port, @ip_address = Socket.unpack_sockaddr_in(get_peername) 
+        rescue Exception => e
+          @port = ""
+          @ip_address = ""
+          puts e.message
+          puts e.backtrace.inspect
+        end
+        
         
         BrB.logger.info " [BrB] Tunnel initialized on #{@uri}"
         @active = true
