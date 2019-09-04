@@ -16,6 +16,7 @@ module BrB
     # Brb interface Handler for Tunnel over Event machine
     class Handler < ::EventMachine::Connection
       attr_reader :uri
+      attr_reader :ip_address, :port
 
       include BrB::Request
       include BrB::Tunnel::Shared
@@ -42,6 +43,16 @@ module BrB
 
       # EventMachine Callback, called after connection has been initialized
       def post_init
+        begin
+          @port, @ip_address = Socket.unpack_sockaddr_in(get_peername) 
+        rescue Exception => e
+          @port = ""
+          @ip_address = ""
+          puts e.message
+          puts e.backtrace.inspect
+        end
+        
+        
         BrB.logger.info " [BrB] Tunnel initialized on #{@uri}"
         @active = true
         if @block
